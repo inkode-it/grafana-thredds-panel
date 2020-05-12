@@ -4,12 +4,21 @@
   "id": "grafana-thredds-panel",
 
   "info": {
-    "description": "Looping animated map for Grafana.",
+    "description": "Grafana plugin to show thredds dataserver geo data.",
     "author": {
-      "name": "Sam Hatchett <sam@citilogics.com>",
-      "url": "https://citilogics.com"
+      "name": "Giorgio @ INKODE SOC COOP <giorgio@inkode.it>",
+      "url": "https://inkode.it"
     },
-    "keywords": ["map", "panel", "GIS", "animation"],
+    "keywords": [
+      "map",
+      "grafana",
+      "geo",
+      "GIS",
+      "netcdf",
+      "plugin",
+      "thredds",
+      "panel"
+    ],
     "logos": {
       "small": "images/thredds-icon.png",
       "large": "images/thredds-icon.png"
@@ -19,12 +28,12 @@
       {"name": "MIT License", "url": "https://github.com/citilogics/grafana-thredds-panel/blob/master/license.txt"}
     ],
     "screenshots": [
-      {"name": "World", "path": "images/overview.png"},
-      {"name": "Query", "path": "images/timeseries-query.png"},
-      {"name": "Options", "path": "images/thredds-options.png"}
+      {"name": "Map", "path": "images/MAP.png"},
+      {"name": "Timeserie", "path": "images/TIMESERIE.png"},
+      {"name": "Options", "path": "images/OPTIONS.png"}
     ],
-    "version": "1.1.2",
-    "updated": "2018-04-30"
+    "version": "0.1.2",
+    "updated": "2020-05-12"
   },
 
   "dependencies": {

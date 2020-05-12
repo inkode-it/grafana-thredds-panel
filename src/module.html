@@ -18,7 +18,7 @@
     <div class='map-overlay-inner nopadding'>
         <div class="scaleText">{{ctrl.panel.thredds.scale_max}}</div>
     <div class='scaleImageContainer'>
-        <img class="scaleImage" src="https://iws.ismar.cnr.it/thredds/wms/tmes_wv_frmc/TMES_waves_collection_best.ncd?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1&HEIGHT=398&PALETTE=rainbow&NUMCOLORBANDS=80"/>
+        <img class="scaleImage" src="{{ctrl.panel.thredds.url}}?REQUEST=GetLegendGraphic&COLORBARONLY=true&WIDTH=1&HEIGHT=398&PALETTE=sst_36&NUMCOLORBANDS=80"/>
     </div>
         <div class="scaleText">{{ctrl.panel.thredds.scale_min}}</div>
     </div>

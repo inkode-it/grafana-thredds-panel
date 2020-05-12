@@ -8,7 +8,7 @@
     "lint": "eslint --color .",
     "lint:watch": "onchange 'src/**/*.js' -- npm run lint",
     "build": "grunt",
-    "prebuild": "npm run lint && npm run clean",
+    "prebuild": "npm run clean",
     "build:watch": "onchange 'src/**/*.js' 'plugin.json' -- npm run build",
     "test:watch": "karma start",
     "test": "karma start --single-run"

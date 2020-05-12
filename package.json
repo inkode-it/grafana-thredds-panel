@@ -1,17 +1,14 @@
 {
   "name": "grafana-thredds-panel",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Grafana plugin to show thredds dataserver geo data",
   "main": "src/module.js",
   "scripts": {
     "clean": "rm -rf dist/*",
-    "lint": "eslint --color .",
-    "lint:watch": "onchange 'src/**/*.js' -- npm run lint",
     "build": "grunt",
     "prebuild": "npm run clean",
     "build:watch": "onchange 'src/**/*.js' 'plugin.json' -- npm run build",
     "test:watch": "karma start",
-    "test": "karma start --single-run"
   },
   "keywords": [
     "map",
@@ -22,7 +19,7 @@
     "thredds",
     "panel"
   ],
-  "author": "Giorgio Resci @ INKODE",
+  "author": "Giorgio Resci @ INKODE SOC COOP",
   "license": "MIT",
   "devDependencies": {
     "babel": "~6.5.1",

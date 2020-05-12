@@ -52,6 +52,15 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 }
 
                 _createClass(Thredds, [{
+                    key: 'setFrame',
+                    value: function setFrame(frameIndex) {
+                        if (this.animation) {
+                            this.stopAnimation();
+                        }
+                        this.currentFrameIndex = frameIndex - 1;
+                        this.stepFrame();
+                    }
+                }, {
                     key: 'createMap',
                     value: function createMap() {
                         console.log('rebuilding map');
@@ -85,6 +94,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                             this.stopAnimation();
                             this.clearFrames();
                             this.createFrames(data);
+                            // this.setFrame(0);
                             this.startAnimation();
                         }
                     }
@@ -142,14 +152,11 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                         var _this3 = this;
 
                         console.log('createFramesSafely');
-
+                        console.log('createFramesSafely', this.ctrl.dataCharacteristics.timeValues);
                         this.ctrl.dataCharacteristics.timeValues.forEach(function (time) {
                             // console.log(time)
                             console.log(_this3.ctrl.panel.thredds);
                             var frameName = 'f-' + time;
-                            // const wmsUrl = `${this.ctrl.panel.thredds.url}?LAYERS=${this.ctrl.panel.thredds.parameter}&ELEVATION=0&TIME=${time}&TRANSPARENT=true&STYLES=boxfill/rainbow&COLORSCALERANGE=${this.ctrl.panel.thredds.scale_min},${this.ctrl.panel.thredds.scale_max}&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image/png&SRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`;
-                            // const wmsUrl = `${this.ctrl.panel.thredds.url}?LAYERS=${this.ctrl.panel.thredds.parameter}&ELEVATION=0&TIME=${time}&TRANSPARENT=true&STYLES=boxfill/rainbow&COLORSCALERANGE=-1,10&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image/png&SRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`;
-                            // const wmsUrl = `${this.ctrl.panel.thredds.url}?LAYERS=${this.ctrl.panel.thredds.parameter}&ELEVATION=0&TIME=${time}&TRANSPARENT=true&STYLES=boxfill/rainbow&COLORSCALERANGE=-1,10&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`;
                             var wmsUrl = _this3.ctrl.panel.thredds.url + '?LAYERS=' + _this3.ctrl.panel.thredds.parameter + '&ELEVATION=0&TIME=' + time + '&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=' + _this3.ctrl.panel.thredds.scale_min + ',' + _this3.ctrl.panel.thredds.scale_max + '&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256';
                             console.log('wmsUrl', wmsUrl);
                             if (_this3.map) {
@@ -159,22 +166,13 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                                     width: 256,
                                     height: 256
                                 });
-                                // const newLayer = {
-                                //     id: 'f-' + time,
-                                //     type: 'raster',
-                                //     source: 'f-' + time,
-                                //     paint: {
-                                //         "raster-opacity": 0,
-                                //     },
-                                // }
-                                // this.map.addLayer(newLayer);
                             }
 
-                            _this3.frames.push(time);
+                            if (!_this3.frames.includes(time)) _this3.frames.push(time);
                         });
 
                         // get slider component, set min/max/value
-                        var slider = d3.select('#map_' + this.ctrl.panel.id + '_slider').attr('min', 0).attr('max', this.frames.length);
+                        var slider = d3.select('#map_' + this.ctrl.panel.id + '_slider').attr('min', 0).attr('max', this.frames.length - 1);
                     }
                 }, {
                     key: 'startAnimation',

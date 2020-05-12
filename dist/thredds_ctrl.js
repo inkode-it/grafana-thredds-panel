@@ -105,7 +105,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
 
           var _this = _possibleConstructorReturn(this, (ThreddsCtrl.__proto__ || Object.getPrototypeOf(ThreddsCtrl)).call(this, $scope, $injector));
 
-          console.log('initializing thredds control');
+          // console.log('initializing thredds control');
 
           _this.dataCharacteristics = {};
 
@@ -133,7 +133,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
           _this.events.on('data-snapshot-load', _this.onDataSnapshotLoad.bind(_this));
 
-          console.log('control constructor loading geo:');
+          // console.log('control constructor loading geo:');
           _this.loadThredds(true);
           _this.lonLatStr = _this.panel.mapCenterLongitude + ',' + _this.panel.mapCenterLatitude;
 
@@ -207,7 +207,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           value: function loadThredds(reload) {
             var _this3 = this;
 
-            console.log('loadThredds', new Date());
+            // console.log('loadThredds', new Date())
             var panel = this.panel;
             if (this.map && !reload) {
               return;
@@ -244,7 +244,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
                   _this3.render();
                 }
               }).fail(function (res) {
-                console.log('error in ajax: ', res);
+                // console.log('error in ajax: ', res);
                 _this3.thredds = null;
                 _this3.render();
               });
@@ -262,7 +262,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             // console.log('series: ', this.series);
             this.dataCharacteristics = this.dataFormatter.getCharacteristics();
 
-            console.log(this.dataCharacteristics);
+            // console.log(this.dataCharacteristics);
             this.render();
           }
         }, {
@@ -281,7 +281,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'onDataReceived',
           value: function onDataReceived(dataList) {
-            console.log('DATA RECEIVED');
+            // console.log('DATA RECEIVED')
             if (this.dashboard.snapshot && this.thredds) {
               this.panel.snapshotLocationData = this.thredds;
             }
@@ -295,7 +295,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'onInitEditMode',
           value: function onInitEditMode() {
-            console.log('init edit mode');
+            // console.log('init edit mode');
             this.addEditorTab('Thredds', 'public/plugins/grafana-thredds-panel/partials/editor.html');
           }
         }, {
@@ -331,10 +331,10 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           value: function updateGeoDataFeatures() {
             var _this4 = this;
 
-            console.log('updateGeoDataFeatures');
-            console.log('updating geo features');
+            // console.log('updateGeoDataFeatures')
+            // console.log('updating geo features');
             if (!this.thredds || !this.thredds.features) {
-              console.log('no geo or no features');
+              // console.log('no geo or no features');
               return;
             }
             if (this.map) {
@@ -342,7 +342,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
               // this.map.map.removeSource('thredds');
             }
             if (!this.dataCharacteristics || !this.dataCharacteristics.timeValues) {
-              console.log('no data yet...');
+              // console.log('no data yet...');
               return;
             }
             // clear timeseries data from geojson data

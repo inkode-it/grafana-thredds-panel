@@ -38,7 +38,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector) {
     super($scope, $injector);
 
-    console.log('initializing thredds control');
+    // console.log('initializing thredds control');
 
     this.dataCharacteristics = {};
 
@@ -66,7 +66,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
     this.events.on('data-snapshot-load', this.onDataSnapshotLoad.bind(this));
 
-    console.log('control constructor loading geo:');
+    // console.log('control constructor loading geo:');
     this.loadThredds(true);
     this.lonLatStr = this.panel.mapCenterLongitude + ',' + this.panel.mapCenterLatitude;
 
@@ -130,7 +130,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   }
 
   loadThredds(reload) {
-    console.log('loadThredds', new Date())
+    // console.log('loadThredds', new Date())
     const panel = this.panel;
     if (this.map && !reload) {
       return;
@@ -170,7 +170,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
             this.render();
           }
         }).fail((res) => {
-          console.log('error in ajax: ', res);
+          // console.log('error in ajax: ', res);
           this.thredds = null;
           this.render();
         });
@@ -187,7 +187,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
     // console.log('series: ', this.series);
     this.dataCharacteristics = this.dataFormatter.getCharacteristics();
 
-    console.log(this.dataCharacteristics);
+    // console.log(this.dataCharacteristics);
     this.render();
   }
 
@@ -205,7 +205,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    console.log('DATA RECEIVED')
+    // console.log('DATA RECEIVED')
     if (this.dashboard.snapshot && this.thredds) {
       this.panel.snapshotLocationData = this.thredds;
     }
@@ -217,7 +217,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    console.log('init edit mode');
+    // console.log('init edit mode');
     this.addEditorTab('Thredds', 'public/plugins/grafana-thredds-panel/partials/editor.html');
   }
 
@@ -246,10 +246,10 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   }
 
   updateGeoDataFeatures() {
-    console.log('updateGeoDataFeatures')
-    console.log('updating geo features');
+    // console.log('updateGeoDataFeatures')
+    // console.log('updating geo features');
     if (!this.thredds || !this.thredds.features) {
-      console.log('no geo or no features');
+      // console.log('no geo or no features');
       return;
     }
     if (this.map) {
@@ -257,7 +257,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
       // this.map.map.removeSource('thredds');
     }
     if (!this.dataCharacteristics || !this.dataCharacteristics.timeValues) {
-      console.log('no data yet...');
+      // console.log('no data yet...');
       return;
     }
     // clear timeseries data from geojson data

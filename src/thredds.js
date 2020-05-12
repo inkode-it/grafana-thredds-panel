@@ -2,17 +2,21 @@
 import moment from 'moment';
 import mapboxgl from './libs/mapbox-gl';
 import * as d3 from './libs/d3';
+import XmlConverter from "./libs/xml-js";
+import Plotly from './libs/plotly';
+
 /* eslint-disable id-length, no-unused-vars */
 
 export default class Thredds {
     constructor(ctrl, mapContainer) {
-        console.log('NEW constructor')
+        // console.log('NEW constructor')
         this.ctrl = ctrl;
         this.mapContainer = mapContainer;
         this.createMap();
         this.frames = []; // list of timestamps
         this.currentFrameIndex = 0;
         this.animation = {};
+        this.time = null;
     }
 
     setFrame(frameIndex)
@@ -25,7 +29,7 @@ export default class Thredds {
     }
 
     createMap() {
-        console.log('rebuilding map');
+        // console.log('rebuilding map');
         const mapCenterLonLat = [parseFloat(this.ctrl.panel.mapCenterLongitude), parseFloat(this.ctrl.panel.mapCenterLatitude)];
         mapboxgl.accessToken = this.ctrl.panel.mbApiKey;
         this.map = new mapboxgl.Map({
@@ -35,6 +39,89 @@ export default class Thredds {
             zoom: parseFloat(this.ctrl.panel.initialZoom),
             interactive: this.ctrl.panel.userInteractionEnabled
         });
+        const onclick = this.onClick,
+        self = this;
+        this.map.on('click', function (e) {
+            onclick(e,self);
+        });
+
+    }
+
+    round(n) {
+        return Math.round(n*1000)/1000
+    }
+
+    onClick(e,self) {
+        const data = {
+            lat: e.lngLat.lat,
+            lng: e.lngLat.lng,
+            from: self.frames[0],
+            to: self.frames[self.frames.length-1],
+            ql: self.ctrl.panel.thredds.parameter
+        }
+        const options = {
+            REQUEST: 'GetFeatureInfo',
+            ELEVATION: '0',
+            TRANSPARENT: 'true',
+            STYLES: 'boxfill/rainbow',
+            COLORSCALERANGE: '-50,50',
+            NUMCOLORBANDS: '20',
+            LOGSCALE: 'false',
+            SERVICE: 'WMS',
+            VERSION: '1.1.1',
+            SRS: 'EPSG:4326',
+            CRS: 'EPSG:4326',
+            FORMAT: 'image/png',
+            INFO_FORMAT: 'text/xml',
+            BBOX: [
+                e.lngLat.lng - 0.002,
+                e.lngLat.lat - 0.002,
+                e.lngLat.lng + 0.002,
+                e.lngLat.lat + 0.002,
+            ].join(','),
+            X: 1,
+            Y: 1,
+            WIDTH: 2,
+            HEIGHT: 2,
+            TIME: `${self.frames[0]}/${self.frames[self.frames.length-1]}`,
+            QUERY_LAYERS: self.ctrl.panel.thredds.parameter,
+            LAYERS: self.ctrl.panel.thredds.parameter,
+        }
+        const url = new URL(self.ctrl.panel.thredds.url)
+        url.search = new URLSearchParams(options)
+        // console.log(url.toString());
+
+        window.$.ajax({
+          type: 'GET',
+          url: url,
+          contentType: 'application/xml',
+          dataType: 'text',
+          success: (res) => {
+             const result = XmlConverter.xml2js(res, { compact : true }).FeatureInfoResponse.FeatureInfo;
+             self.graphData = {
+                 name: `${self.ctrl.panel.thredds.parameter} - lat ${self.round(e.lngLat.lat)} lon ${self.round(e.lngLat.lng)}`,
+                 x: result.map(function (x) {
+                    return x.time._text
+                 }),
+                 y: result.map(function (x) {
+                    return x.value._text !== 'none' ? self.round(x.value._text) : null
+                 }),
+                type: 'scatter',
+             }
+             document.getElementById("graphcontainer").style.display = "block";
+              Plotly.newPlot(
+                  'graph',
+                  [self.graphData],
+                  {title: {text: self.graphData.name}, margin: {l:40,r:10,t:40,b:40}},
+                  {responsive: true,showLink: false,displayLogo: false,displayModeBar: false}
+              );
+          }
+        }).fail((res) => {
+          console.log('error in ajax: ', res);
+          this.thredds = null;
+          this.render();
+        });
+    // }
 
     }
 
@@ -50,7 +137,7 @@ export default class Thredds {
     drawLayerFrames() {
         const data = this.ctrl.data;
         if (this.needToRedrawFrames(data)) {
-            console.log('needToRedrawFrames')
+            // console.log('needToRedrawFrames')
             this.stopAnimation();
             this.clearFrames();
             this.createFrames(data);
@@ -68,32 +155,32 @@ export default class Thredds {
     }
 
     createFrames() {
-        console.log('createFrames')
+        // console.log('createFrames')
         if (!this.ctrl.dataCharacteristics.timeValues) {
-            console.log('no series to display');
+            // console.log('no series to display');
             return;
         }
 
         if (!this.ctrl.thredds) {
-            console.log('no thredds data');
+            // console.log('no thredds data');
             return;
         }
 
         if (this.map.loaded()) {
             this.createFramesSafely();
         } else {
-            console.log('no geo source in map. maybe not loaded?');
+            // console.log('no geo source in map. maybe not loaded?');
             // this is stupid to use setInterval.
             // but mapbox doesn't seem to have a on-source-loaded event that reliably works
             // for this purpose.
             let attemptsLeft = 10;
             const interval = setInterval(() => {
-                console.log('waited for layer to load.');
+                // console.log('waited for layer to load.');
                 if (this.map.loaded()) {
                     this.createFramesSafely();
                     clearInterval(interval);
                 } else {
-                    console.log('still no geo source. try refresh manually?');
+                    // console.log('still no geo source. try refresh manually?');
                     if (--attemptsLeft <= 0) {
                         clearInterval(interval);
                     }
@@ -154,7 +241,7 @@ export default class Thredds {
     }
 
     stepFrame(goToIndex) {
-        console.log('stepFrame', this.frames.length, this.currentFrameIndex)
+        // console.log('stepFrame', this.frames.length, this.currentFrameIndex)
         if (!this.map) {
             return;
         }
@@ -174,7 +261,7 @@ export default class Thredds {
         }
         const newFrame = 'f-' + this.frames[this.currentFrameIndex];
 
-        console.log(newFrame, oldFrame)
+        // console.log(newFrame, oldFrame)
         if(this.map.getLayer(oldFrame)) {
             this.map.removeLayer(oldFrame);
         }
@@ -187,6 +274,7 @@ export default class Thredds {
             },
         }
         this.map.addLayer(newLayer);
+        this.time = this.frames[this.currentFrameIndex]
         // this.map.setPaintProperty(newFrame, 'raster-opacity', 1);
         // this.map.setPaintProperty(oldFrame, 'raster-opacity', 0);
 

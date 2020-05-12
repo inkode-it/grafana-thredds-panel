@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, _context) {
+System.register(['moment', './libs/mapbox-gl', './libs/d3', './libs/xml-js', './libs/plotly'], function (_export, _context) {
     "use strict";
 
-    var moment, mapboxgl, d3, _createClass, Thredds;
+    var moment, mapboxgl, d3, XmlConverter, Plotly, _createClass, Thredds;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -18,6 +18,10 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
             mapboxgl = _libsMapboxGl.default;
         }, function (_libsD) {
             d3 = _libsD;
+        }, function (_libsXmlJs) {
+            XmlConverter = _libsXmlJs.default;
+        }, function (_libsPlotly) {
+            Plotly = _libsPlotly.default;
         }],
         execute: function () {
             _createClass = function () {
@@ -42,13 +46,14 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 function Thredds(ctrl, mapContainer) {
                     _classCallCheck(this, Thredds);
 
-                    console.log('NEW constructor');
+                    // console.log('NEW constructor')
                     this.ctrl = ctrl;
                     this.mapContainer = mapContainer;
                     this.createMap();
                     this.frames = []; // list of timestamps
                     this.currentFrameIndex = 0;
                     this.animation = {};
+                    this.time = null;
                 }
 
                 _createClass(Thredds, [{
@@ -63,7 +68,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 }, {
                     key: 'createMap',
                     value: function createMap() {
-                        console.log('rebuilding map');
+                        // console.log('rebuilding map');
                         var mapCenterLonLat = [parseFloat(this.ctrl.panel.mapCenterLongitude), parseFloat(this.ctrl.panel.mapCenterLatitude)];
                         mapboxgl.accessToken = this.ctrl.panel.mbApiKey;
                         this.map = new mapboxgl.Map({
@@ -73,6 +78,82 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                             zoom: parseFloat(this.ctrl.panel.initialZoom),
                             interactive: this.ctrl.panel.userInteractionEnabled
                         });
+                        var onclick = this.onClick,
+                            self = this;
+                        this.map.on('click', function (e) {
+                            onclick(e, self);
+                        });
+                    }
+                }, {
+                    key: 'round',
+                    value: function round(n) {
+                        return Math.round(n * 1000) / 1000;
+                    }
+                }, {
+                    key: 'onClick',
+                    value: function onClick(e, self) {
+                        var _this = this;
+
+                        var data = {
+                            lat: e.lngLat.lat,
+                            lng: e.lngLat.lng,
+                            from: self.frames[0],
+                            to: self.frames[self.frames.length - 1],
+                            ql: self.ctrl.panel.thredds.parameter
+                        };
+                        var options = {
+                            REQUEST: 'GetFeatureInfo',
+                            ELEVATION: '0',
+                            TRANSPARENT: 'true',
+                            STYLES: 'boxfill/rainbow',
+                            COLORSCALERANGE: '-50,50',
+                            NUMCOLORBANDS: '20',
+                            LOGSCALE: 'false',
+                            SERVICE: 'WMS',
+                            VERSION: '1.1.1',
+                            SRS: 'EPSG:4326',
+                            CRS: 'EPSG:4326',
+                            FORMAT: 'image/png',
+                            INFO_FORMAT: 'text/xml',
+                            BBOX: [e.lngLat.lng - 0.002, e.lngLat.lat - 0.002, e.lngLat.lng + 0.002, e.lngLat.lat + 0.002].join(','),
+                            X: 1,
+                            Y: 1,
+                            WIDTH: 2,
+                            HEIGHT: 2,
+                            TIME: self.frames[0] + '/' + self.frames[self.frames.length - 1],
+                            QUERY_LAYERS: self.ctrl.panel.thredds.parameter,
+                            LAYERS: self.ctrl.panel.thredds.parameter
+                        };
+                        var url = new URL(self.ctrl.panel.thredds.url);
+                        url.search = new URLSearchParams(options);
+                        // console.log(url.toString());
+
+                        window.$.ajax({
+                            type: 'GET',
+                            url: url,
+                            contentType: 'application/xml',
+                            dataType: 'text',
+                            success: function success(res) {
+                                var result = XmlConverter.xml2js(res, { compact: true }).FeatureInfoResponse.FeatureInfo;
+                                self.graphData = {
+                                    name: self.ctrl.panel.thredds.parameter + ' - lat ' + self.round(e.lngLat.lat) + ' lon ' + self.round(e.lngLat.lng),
+                                    x: result.map(function (x) {
+                                        return x.time._text;
+                                    }),
+                                    y: result.map(function (x) {
+                                        return x.value._text !== 'none' ? self.round(x.value._text) : null;
+                                    }),
+                                    type: 'scatter'
+                                };
+                                document.getElementById("graphcontainer").style.display = "block";
+                                Plotly.newPlot('graph', [self.graphData], { title: { text: self.graphData.name }, margin: { l: 40, r: 10, t: 40, b: 40 } }, { responsive: true, showLink: false, displayLogo: false, displayModeBar: false });
+                            }
+                        }).fail(function (res) {
+                            console.log('error in ajax: ', res);
+                            _this.thredds = null;
+                            _this.render();
+                        });
+                        // }
                     }
                 }, {
                     key: 'createLegend',
@@ -90,7 +171,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                     value: function drawLayerFrames() {
                         var data = this.ctrl.data;
                         if (this.needToRedrawFrames(data)) {
-                            console.log('needToRedrawFrames');
+                            // console.log('needToRedrawFrames')
                             this.stopAnimation();
                             this.clearFrames();
                             this.createFrames(data);
@@ -101,44 +182,44 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 }, {
                     key: 'clearFrames',
                     value: function clearFrames() {
-                        var _this = this;
+                        var _this2 = this;
 
                         this.frames.forEach(function (item) {
-                            if (_this.map.getLayer('f-' + item)) _this.map.removeLayer('f-' + item);
+                            if (_this2.map.getLayer('f-' + item)) _this2.map.removeLayer('f-' + item);
                         });
                         this.frames = [];
                     }
                 }, {
                     key: 'createFrames',
                     value: function createFrames() {
-                        var _this2 = this;
+                        var _this3 = this;
 
-                        console.log('createFrames');
+                        // console.log('createFrames')
                         if (!this.ctrl.dataCharacteristics.timeValues) {
-                            console.log('no series to display');
+                            // console.log('no series to display');
                             return;
                         }
 
                         if (!this.ctrl.thredds) {
-                            console.log('no thredds data');
+                            // console.log('no thredds data');
                             return;
                         }
 
                         if (this.map.loaded()) {
                             this.createFramesSafely();
                         } else {
-                            console.log('no geo source in map. maybe not loaded?');
+                            // console.log('no geo source in map. maybe not loaded?');
                             // this is stupid to use setInterval.
                             // but mapbox doesn't seem to have a on-source-loaded event that reliably works
                             // for this purpose.
                             var attemptsLeft = 10;
                             var interval = setInterval(function () {
-                                console.log('waited for layer to load.');
-                                if (_this2.map.loaded()) {
-                                    _this2.createFramesSafely();
+                                // console.log('waited for layer to load.');
+                                if (_this3.map.loaded()) {
+                                    _this3.createFramesSafely();
                                     clearInterval(interval);
                                 } else {
-                                    console.log('still no geo source. try refresh manually?');
+                                    // console.log('still no geo source. try refresh manually?');
                                     if (--attemptsLeft <= 0) {
                                         clearInterval(interval);
                                     }
@@ -149,7 +230,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 }, {
                     key: 'createFramesSafely',
                     value: function createFramesSafely() {
-                        var _this3 = this;
+                        var _this4 = this;
 
                         // console.log('createFramesSafely')
                         // console.log('createFramesSafely',this.ctrl.dataCharacteristics.timeValues)
@@ -157,10 +238,10 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                             // console.log(time)
                             // console.log(this.ctrl.panel.thredds)
                             var frameName = 'f-' + time;
-                            var wmsUrl = _this3.ctrl.panel.thredds.url + '?LAYERS=' + _this3.ctrl.panel.thredds.parameter + '&ELEVATION=0&TIME=' + time + '&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=' + _this3.ctrl.panel.thredds.scale_min + ',' + _this3.ctrl.panel.thredds.scale_max + '&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256';
+                            var wmsUrl = _this4.ctrl.panel.thredds.url + '?LAYERS=' + _this4.ctrl.panel.thredds.parameter + '&ELEVATION=0&TIME=' + time + '&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=' + _this4.ctrl.panel.thredds.scale_min + ',' + _this4.ctrl.panel.thredds.scale_max + '&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256';
                             // console.log('wmsUrl', wmsUrl);
-                            if (_this3.map) {
-                                if (!_this3.map.getSource('f-' + time)) _this3.map.addSource('f-' + time, {
+                            if (_this4.map) {
+                                if (!_this4.map.getSource('f-' + time)) _this4.map.addSource('f-' + time, {
                                     type: 'raster',
                                     tiles: [wmsUrl],
                                     width: 256,
@@ -168,7 +249,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                                 });
                             }
 
-                            if (!_this3.frames.includes(time)) _this3.frames.push(time);
+                            if (!_this4.frames.includes(time)) _this4.frames.push(time);
                         });
 
                         // get slider component, set min/max/value
@@ -177,14 +258,14 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 }, {
                     key: 'startAnimation',
                     value: function startAnimation() {
-                        var _this4 = this;
+                        var _this5 = this;
 
                         if (this.animation) {
                             this.stopAnimation();
                         }
 
                         this.animation = setInterval(function () {
-                            _this4.stepFrame();
+                            _this5.stepFrame();
                         }, 3000);
                     }
                 }, {
@@ -202,7 +283,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                 }, {
                     key: 'stepFrame',
                     value: function stepFrame(goToIndex) {
-                        console.log('stepFrame', this.frames.length, this.currentFrameIndex);
+                        // console.log('stepFrame', this.frames.length, this.currentFrameIndex)
                         if (!this.map) {
                             return;
                         }
@@ -222,7 +303,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                         }
                         var newFrame = 'f-' + this.frames[this.currentFrameIndex];
 
-                        console.log(newFrame, oldFrame);
+                        // console.log(newFrame, oldFrame)
                         if (this.map.getLayer(oldFrame)) {
                             this.map.removeLayer(oldFrame);
                         }
@@ -235,6 +316,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                             }
                         };
                         this.map.addLayer(newLayer);
+                        this.time = this.frames[this.currentFrameIndex];
                         // this.map.setPaintProperty(newFrame, 'raster-opacity', 1);
                         // this.map.setPaintProperty(oldFrame, 'raster-opacity', 0);
 

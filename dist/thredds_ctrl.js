@@ -234,12 +234,12 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
                     return item.Name._text === panel.thredds.parameter;
                   });
                   var timeDimensions = _this3.WmsLayer.Dimension._text.replace('\n', '').replace(/[^\w-:,]/gi, '').replace('\t', '').replace(' ', '').split(',');
-                  console.log('timeDimensions', timeDimensions);
+                  // console.log('timeDimensions', timeDimensions)
 
                   _this3.thredds = timeDimensions.map(function (i) {
                     return _this3.dataFormatter.formatDate(i.replace('00000Z', '00.000Z'));
                   });
-                  console.log('this.thredds', _this3.thredds);
+                  // console.log('this.thredds', this.thredds);
                   _this3.setWmsData();
                   _this3.render();
                 }
@@ -259,7 +259,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
               this.panel.snapshotLocationData = this.thredds;
             }
             this.series = this.thredds;
-            console.log('series: ', this.series);
+            // console.log('series: ', this.series);
             this.dataCharacteristics = this.dataFormatter.getCharacteristics();
 
             console.log(this.dataCharacteristics);
@@ -268,14 +268,14 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'seriesThreddsHandler',
           value: function seriesThreddsHandler(seriesData) {
-            console.log('seriesData', seriesData);
+            // console.log('seriesData', seriesData)
             var series = new TimeSeries({
               datapoints: seriesData.datapoints,
               alias: seriesData.target
             });
 
             series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-            console.log('seriesThreddsHandler', series);
+            // console.log('seriesThreddsHandler', series)
             return series;
           }
         }, {
@@ -306,14 +306,14 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'seriesHandler',
           value: function seriesHandler(seriesData) {
-            console.log('seriesData', seriesData);
+            // console.log('seriesData', seriesData)
             var series = new TimeSeries({
               datapoints: seriesData.datapoints,
               alias: seriesData.target
             });
 
             series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-            console.log(series);
+            // console.log(series)
             return series;
           }
         }, {

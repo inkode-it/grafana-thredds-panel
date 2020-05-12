@@ -162,10 +162,10 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
               .replace('\t', '')
               .replace(' ', '')
               .split(',')
-            console.log('timeDimensions', timeDimensions)
+            // console.log('timeDimensions', timeDimensions)
 
             this.thredds = timeDimensions.map((i)=>this.dataFormatter.formatDate(i.replace('00000Z', '00.000Z')));
-            console.log('this.thredds', this.thredds);
+            // console.log('this.thredds', this.thredds);
             this.setWmsData();
             this.render();
           }
@@ -184,7 +184,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
       this.panel.snapshotLocationData = this.thredds;
     }
     this.series = this.thredds;
-    console.log('series: ', this.series);
+    // console.log('series: ', this.series);
     this.dataCharacteristics = this.dataFormatter.getCharacteristics();
 
     console.log(this.dataCharacteristics);
@@ -193,14 +193,14 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
 
 
   seriesThreddsHandler(seriesData) {
-    console.log('seriesData', seriesData)
+    // console.log('seriesData', seriesData)
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
     });
 
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-    console.log('seriesThreddsHandler', series)
+    // console.log('seriesThreddsHandler', series)
     return series;
   }
 
@@ -226,14 +226,14 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   }
 
   seriesHandler(seriesData) {
-    console.log('seriesData', seriesData)
+    // console.log('seriesData', seriesData)
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
     });
 
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-    console.log(series)
+    // console.log(series)
     return series;
   }
 

@@ -3,8 +3,8 @@ import Thredds from './thredds';
 export default function link(scope, elem, attrs, ctrl) {
   const mapContainer = elem.find('.mapcontainer');
   const mapSlider = elem.find('.mapslider');
-  console.log('mapSlider',mapSlider);
-  console.log('initialized map renderer');
+  // console.log('mapSlider',mapSlider);
+  // console.log('initialized map renderer');
 
   ctrl.events.on('render', () => {
     render();
@@ -17,13 +17,13 @@ export default function link(scope, elem, attrs, ctrl) {
   });
 
   function render() {
-    console.log('called into RENDER');
+    // console.log('called into RENDER');
     if (!ctrl.map) {
       // console.log('creating new map');
       ctrl.map = new Thredds(ctrl, mapContainer[0]);
       // mapSlider[0].setAttribute('onchange', ctrl.map.setFrame);
       mapSlider[0].onchange = function(e){ctrl.map.setFrame(e.target.value);};
-      console.log(mapSlider);
+      // console.log(mapSlider);
     }
 
     ctrl.map.resize();
@@ -35,6 +35,6 @@ export default function link(scope, elem, attrs, ctrl) {
 
     // ctrl.updateRamp();
     ctrl.map.drawLayerFrames();
-    console.log(ctrl);
+    // console.log(ctrl);
   }
 }

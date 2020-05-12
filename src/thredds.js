@@ -35,6 +35,7 @@ export default class Thredds {
             zoom: parseFloat(this.ctrl.panel.initialZoom),
             interactive: this.ctrl.panel.userInteractionEnabled
         });
+
     }
 
     createLegend() {
@@ -102,14 +103,14 @@ export default class Thredds {
     }
 
     createFramesSafely() {
-        console.log('createFramesSafely')
-        console.log('createFramesSafely',this.ctrl.dataCharacteristics.timeValues)
+        // console.log('createFramesSafely')
+        // console.log('createFramesSafely',this.ctrl.dataCharacteristics.timeValues)
         this.ctrl.dataCharacteristics.timeValues.forEach((time) => {
             // console.log(time)
-            console.log(this.ctrl.panel.thredds)
+            // console.log(this.ctrl.panel.thredds)
             const frameName = 'f-' + time;
             const wmsUrl = `${this.ctrl.panel.thredds.url}?LAYERS=${this.ctrl.panel.thredds.parameter}&ELEVATION=0&TIME=${time}&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=${this.ctrl.panel.thredds.scale_min},${this.ctrl.panel.thredds.scale_max}&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`;
-            console.log('wmsUrl', wmsUrl);
+            // console.log('wmsUrl', wmsUrl);
             if (this.map) {
                 if (!this.map.getSource('f-' + time))
                     this.map.addSource('f-' + time, {

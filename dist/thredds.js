@@ -151,14 +151,14 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3'], function (_export, 
                     value: function createFramesSafely() {
                         var _this3 = this;
 
-                        console.log('createFramesSafely');
-                        console.log('createFramesSafely', this.ctrl.dataCharacteristics.timeValues);
+                        // console.log('createFramesSafely')
+                        // console.log('createFramesSafely',this.ctrl.dataCharacteristics.timeValues)
                         this.ctrl.dataCharacteristics.timeValues.forEach(function (time) {
                             // console.log(time)
-                            console.log(_this3.ctrl.panel.thredds);
+                            // console.log(this.ctrl.panel.thredds)
                             var frameName = 'f-' + time;
                             var wmsUrl = _this3.ctrl.panel.thredds.url + '?LAYERS=' + _this3.ctrl.panel.thredds.parameter + '&ELEVATION=0&TIME=' + time + '&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=' + _this3.ctrl.panel.thredds.scale_min + ',' + _this3.ctrl.panel.thredds.scale_max + '&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256';
-                            console.log('wmsUrl', wmsUrl);
+                            // console.log('wmsUrl', wmsUrl);
                             if (_this3.map) {
                                 if (!_this3.map.getSource('f-' + time)) _this3.map.addSource('f-' + time, {
                                     type: 'raster',

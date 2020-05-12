@@ -7,8 +7,8 @@ System.register(['./thredds'], function (_export, _context) {
   function link(scope, elem, attrs, ctrl) {
     var mapContainer = elem.find('.mapcontainer');
     var mapSlider = elem.find('.mapslider');
-    console.log('mapSlider', mapSlider);
-    console.log('initialized map renderer');
+    // console.log('mapSlider',mapSlider);
+    // console.log('initialized map renderer');
 
     ctrl.events.on('render', function () {
       render();
@@ -21,7 +21,7 @@ System.register(['./thredds'], function (_export, _context) {
     });
 
     function render() {
-      console.log('called into RENDER');
+      // console.log('called into RENDER');
       if (!ctrl.map) {
         // console.log('creating new map');
         ctrl.map = new Thredds(ctrl, mapContainer[0]);
@@ -29,7 +29,7 @@ System.register(['./thredds'], function (_export, _context) {
         mapSlider[0].onchange = function (e) {
           ctrl.map.setFrame(e.target.value);
         };
-        console.log(mapSlider);
+        // console.log(mapSlider);
       }
 
       ctrl.map.resize();
@@ -40,7 +40,7 @@ System.register(['./thredds'], function (_export, _context) {
 
       // ctrl.updateRamp();
       ctrl.map.drawLayerFrames();
-      console.log(ctrl);
+      // console.log(ctrl);
     }
   }
 

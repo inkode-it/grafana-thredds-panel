@@ -93,7 +93,8 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           scale_max: 1,
           location: 'url', // one of: url, text
           contents: 'xxxxxx', // either the jsonp url or the json text itself
-          callback: 'data' // named callback in jsonp contents
+          callback: 'data', // named callback in jsonp contents
+          style: 'boxfill/sst_36' // named callback in jsonp contents
         }
       };
 

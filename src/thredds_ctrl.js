@@ -31,6 +31,7 @@ const panelDefaults = {
     location: 'url', // one of: url, text
     contents: 'xxxxxx', // either the jsonp url or the json text itself
     callback: 'data', // named callback in jsonp contents
+    style: 'boxfill/sst_36', // named callback in jsonp contents
   },
 };
 

@@ -63,7 +63,7 @@ export default class Thredds {
             REQUEST: 'GetFeatureInfo',
             ELEVATION: '0',
             TRANSPARENT: 'true',
-            STYLES: 'boxfill/rainbow',
+            STYLES: self.ctrl.panel.thredds.style,
             COLORSCALERANGE: '-50,50',
             NUMCOLORBANDS: '20',
             LOGSCALE: 'false',
@@ -196,7 +196,7 @@ export default class Thredds {
             // console.log(time)
             // console.log(this.ctrl.panel.thredds)
             const frameName = 'f-' + time;
-            const wmsUrl = `${this.ctrl.panel.thredds.url}?LAYERS=${this.ctrl.panel.thredds.parameter}&ELEVATION=0&TIME=${time}&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=${this.ctrl.panel.thredds.scale_min},${this.ctrl.panel.thredds.scale_max}&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`;
+            const wmsUrl = `${this.ctrl.panel.thredds.url}?LAYERS=${this.ctrl.panel.thredds.parameter}&ELEVATION=0&TIME=${time}&TRANSPARENT=true&STYLES=${this.ctrl.panel.thredds.style}&COLORSCALERANGE=${this.ctrl.panel.thredds.scale_min},${this.ctrl.panel.thredds.scale_max}&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`;
             // console.log('wmsUrl', wmsUrl);
             if (this.map) {
                 if (!this.map.getSource('f-' + time))

@@ -2,9 +2,6 @@
 
 This is a **preliminary working version**, plugin is based on Grafana [geoloop plugin](https://grafana.com/grafana/plugins/citilogics-geoloop-panel) and  [worldmap plugin](https://grafana.com/grafana/plugins/grafana-worldmap-panel/installation).
 
-### Credits
-Developed by [INKODE](https://inkode.it) for [ISMAR-CNR Venice](http://www.ismar.cnr.it/) under [Interreg ADRION I-STORMS Project](https://iws.seastorms.eu/)
-
 ### Before use:
 - **THREDDS** make sure your THREDDS server accept CORS request from your grafana domain, or create a proxy service to avoid errors.
 - **MAPBOX KEY** create an API key from mapbox.
@@ -17,3 +14,9 @@ Developed by [INKODE](https://inkode.it) for [ISMAR-CNR Venice](http://www.ismar
 
 #### Option panel
 ![OPTIONS](dist/images/OPTIONS.png)
+
+
+### Credits
+![ADRION](dist/images/ADRION.png)
+
+Developed by [INKODE](https://inkode.it) for [ISMAR-CNR Venice](http://www.ismar.cnr.it/) under [Interreg ADRION I-STORMS Project](https://iws.seastorms.eu/)

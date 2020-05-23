@@ -105,7 +105,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3', './libs/xml-js', './
                             REQUEST: 'GetFeatureInfo',
                             ELEVATION: '0',
                             TRANSPARENT: 'true',
-                            STYLES: 'boxfill/rainbow',
+                            STYLES: self.ctrl.panel.thredds.style,
                             COLORSCALERANGE: '-50,50',
                             NUMCOLORBANDS: '20',
                             LOGSCALE: 'false',
@@ -238,7 +238,7 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3', './libs/xml-js', './
                             // console.log(time)
                             // console.log(this.ctrl.panel.thredds)
                             var frameName = 'f-' + time;
-                            var wmsUrl = _this4.ctrl.panel.thredds.url + '?LAYERS=' + _this4.ctrl.panel.thredds.parameter + '&ELEVATION=0&TIME=' + time + '&TRANSPARENT=true&STYLES=boxfill%2Fsst_36&COLORSCALERANGE=' + _this4.ctrl.panel.thredds.scale_min + ',' + _this4.ctrl.panel.thredds.scale_max + '&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256';
+                            var wmsUrl = _this4.ctrl.panel.thredds.url + '?LAYERS=' + _this4.ctrl.panel.thredds.parameter + '&ELEVATION=0&TIME=' + time + '&TRANSPARENT=true&STYLES=' + _this4.ctrl.panel.thredds.style + '&COLORSCALERANGE=' + _this4.ctrl.panel.thredds.scale_min + ',' + _this4.ctrl.panel.thredds.scale_max + '&NUMCOLORBANDS=80&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256';
                             // console.log('wmsUrl', wmsUrl);
                             if (_this4.map) {
                                 if (!_this4.map.getSource('f-' + time)) _this4.map.addSource('f-' + time, {

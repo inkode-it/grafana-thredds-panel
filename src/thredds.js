@@ -241,12 +241,12 @@ export default class Thredds {
         const self = this;
 
         const start = d3.select("#start_"+this.ctrl.panel.id).on("click", function() {
-            console.log('PASSO start')
+            // console.log('PASSO start')
             self.startAnimation();
         });
 
         const stop = d3.select("#stop_"+this.ctrl.panel.id).on("click", function() {
-            console.log('PASSO stop')
+            // console.log('PASSO stop')
             self.stopAnimation();
         });
     }

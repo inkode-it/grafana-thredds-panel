@@ -275,12 +275,12 @@ System.register(['moment', './libs/mapbox-gl', './libs/d3', './libs/xml-js', './
                         var self = this;
 
                         var start = d3.select("#start_" + this.ctrl.panel.id).on("click", function () {
-                            console.log('PASSO start');
+                            // console.log('PASSO start')
                             self.startAnimation();
                         });
 
                         var stop = d3.select("#stop_" + this.ctrl.panel.id).on("click", function () {
-                            console.log('PASSO stop');
+                            // console.log('PASSO stop')
                             self.stopAnimation();
                         });
                     }

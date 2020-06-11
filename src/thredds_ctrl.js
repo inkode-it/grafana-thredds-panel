@@ -33,6 +33,7 @@ const panelDefaults = {
     callback: 'data', // named callback in jsonp contents
     style: 'boxfill/sst_36', // named callback in jsonp contents
   },
+  wmsoverlay: 'https://iwsproxy.visualfarm.it/istorms/istorms/base/{z}/{x}/{y}.png', // named callback in jsonp contents
 };
 
 export default class ThreddsCtrl extends MetricsPanelCtrl {

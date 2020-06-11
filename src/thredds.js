@@ -39,6 +39,26 @@ export default class Thredds {
             zoom: parseFloat(this.ctrl.panel.initialZoom),
             interactive: this.ctrl.panel.userInteractionEnabled
         });
+        if(this.ctrl.panel.wmsoverlay)
+        {
+            const newLayer = {
+                id: 'wmsoverlay',
+                type: 'raster',
+                source: {
+                    'type': 'raster',
+                    'tiles': [
+                    this.ctrl.panel.wmsoverlay
+                    ]
+                },
+                paint: {
+                    "raster-opacity": 1,
+                },
+            }
+            this.map.on('style.load', function (e) {
+                this.addLayer(newLayer);
+            });
+        }
+
         const onclick = this.onClick,
         self = this;
         this.map.on('click', function (e) {
@@ -108,9 +128,9 @@ export default class Thredds {
                  }),
                 type: 'scatter',
              }
-             document.getElementById("graphcontainer").style.display = "block";
+             document.getElementById("graphcontainer_"+self.ctrl.panel.id).style.display = "block";
               Plotly.newPlot(
-                  'graph',
+                  "graph_"+self.ctrl.panel.id,
                   [self.graphData],
                   {title: {text: self.graphData.name}, margin: {l:40,r:10,t:40,b:40}},
                   {responsive: true,showLink: false,displayLogo: false,displayModeBar: false}
@@ -215,24 +235,40 @@ export default class Thredds {
         // get slider component, set min/max/value
         const slider = d3.select('#map_' + this.ctrl.panel.id + '_slider')
             .attr('min', 0)
-            .attr('max', (this.frames.length -1))
-        ;
+            .attr('max', (this.frames.length -1));
+
+
+        const self = this;
+
+        const start = d3.select("#start_"+this.ctrl.panel.id).on("click", function() {
+            console.log('PASSO start')
+            self.startAnimation();
+        });
+
+        const stop = d3.select("#stop_"+this.ctrl.panel.id).on("click", function() {
+            console.log('PASSO stop')
+            self.stopAnimation();
+        });
     }
 
 
     startAnimation() {
         if (this.animation) {
-            this.stopAnimation();
+            this.stopAnimationsync();
         }
 
         this.animation = setInterval(() => {
             this.stepFrame();
         }, 3000);
+        d3.select("#stop_"+this.ctrl.panel.id).style('display', '');
+        d3.select("#start_"+this.ctrl.panel.id).style('display', 'none');
     }
 
     stopAnimation() {
         clearInterval(this.animation);
         this.animation = null;
+        d3.select("#start_"+this.ctrl.panel.id).style('display', '');
+        d3.select("#stop_"+this.ctrl.panel.id).style('display', 'none');
     }
 
     pauseAnimation() {

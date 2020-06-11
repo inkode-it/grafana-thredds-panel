@@ -95,7 +95,8 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           contents: 'xxxxxx', // either the jsonp url or the json text itself
           callback: 'data', // named callback in jsonp contents
           style: 'boxfill/sst_36' // named callback in jsonp contents
-        }
+        },
+        wmsoverlay: 'https://iwsproxy.visualfarm.it/istorms/istorms/base/{z}/{x}/{y}.png' // named callback in jsonp contents
       };
 
       ThreddsCtrl = function (_MetricsPanelCtrl) {

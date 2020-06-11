@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "Thredds",
-  "id": "grafana-thredds-panel",
+  "id": "thredds-panel",
 
   "info": {
     "description": "Grafana plugin to show thredds dataserver geo data.",
@@ -24,8 +24,8 @@
       "large": "images/thredds-icon.png"
     },
     "links": [
-      {"name": "Project site", "url": "https://github.com/citilogics/grafana-thredds-panel"},
-      {"name": "MIT License", "url": "https://github.com/citilogics/grafana-thredds-panel/blob/master/license.txt"}
+      {"name": "Project site", "url": "https://github.com/inkode-it/grafana-thredds-panel"},
+      {"name": "MIT License", "url": "https://github.com/inkode-it/grafana-thredds-panel/blob/master/license.txt"}
     ],
     "screenshots": [
       {"name": "Map", "path": "images/MAP.png"},

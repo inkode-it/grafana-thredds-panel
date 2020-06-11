@@ -32,8 +32,8 @@
       {"name": "Timeserie", "path": "images/TIMESERIE.png"},
       {"name": "Options", "path": "images/OPTIONS.png"}
     ],
-    "version": "0.1.2",
-    "updated": "2020-05-12"
+    "version": "0.2.1",
+    "updated": "2020-06-11"
   },
 
   "dependencies": {

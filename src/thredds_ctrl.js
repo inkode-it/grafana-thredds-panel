@@ -77,7 +77,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
   }
 
   getColorScaleImgUrl() {
-    return '/public/plugins/grafana-thredds-panel/images/colorRamps/' + this.panel.colorRamp.scaleName + '.png';
+    return '/public/plugins/thredds-panel/images/colorRamps/' + this.panel.colorRamp.scaleName + '.png';
   }
   // getColorNames() {
   //   return Object.keys(this.opts.colorRamps);
@@ -220,7 +220,7 @@ export default class ThreddsCtrl extends MetricsPanelCtrl {
 
   onInitEditMode() {
     // console.log('init edit mode');
-    this.addEditorTab('Thredds', 'public/plugins/grafana-thredds-panel/partials/editor.html');
+    this.addEditorTab('Thredds', 'public/plugins/thredds-panel/partials/editor.html');
   }
 
   onDataSnapshotLoad(snapshotData) {

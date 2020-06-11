@@ -1,6 +1,6 @@
 {
-  "name": "grafana-thredds-panel",
-  "version": "0.1.2",
+  "name": "thredds-panel",
+  "version": "0.2.1",
   "description": "Grafana plugin to show thredds dataserver geo data",
   "main": "src/module.js",
   "scripts": {
